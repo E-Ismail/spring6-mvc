@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 /*
  * @author Ech-Cherrate Ismail
@@ -22,5 +23,10 @@ class BeerControllerTest {
     @Test
     void getBeerById() {
         System.out.println(beerController.getBeerById(UUID.randomUUID()));
+    }
+
+    @Test
+    void listBeers() {
+        assertThat(beerController.litBeers().size()).isEqualTo(3);
     }
 }
