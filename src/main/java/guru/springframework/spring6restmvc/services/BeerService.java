@@ -18,4 +18,6 @@ public interface BeerService {
     List<Beer> litBeers();
 
     Beer saveBeer(Beer beer);
+
+    void updateBeerById(UUID beerId, Beer beer);
 }
