@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
-@RequiredArgsConstructor
-@Slf4j
 public class BeerController {
     private final BeerService beerService;
 
     @PutMapping("/{beerId}")
-    public ResponseEntity<HttpStatus> updateById(@PathVariable("beerId") UUID beerId,@RequestBody Beer beer) {
+    public ResponseEntity<HttpStatus> updateById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer) {
         beerService.updateBeerById(beerId, beer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

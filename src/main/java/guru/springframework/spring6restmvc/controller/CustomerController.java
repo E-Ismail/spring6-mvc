@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/customer")
-@RequiredArgsConstructor
-@Slf4j
 public class CustomerController {
 
     private final CustomerService customerService;
