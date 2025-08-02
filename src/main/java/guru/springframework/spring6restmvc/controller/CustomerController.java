@@ -6,10 +6,9 @@ package guru.springframework.spring6restmvc.controller;
  * @create 29/07/2025 - 22:37
  */
 
-import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.model.Customer;
 import guru.springframework.spring6restmvc.services.CustomerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/customer")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class CustomerController {
 
