@@ -62,4 +62,13 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerMap.put(customer.getId(), savedCustomer);
         return savedCustomer;
     }
+
+    @Override
+    public void updateCustomerById(UUID customerId, Customer customer) {
+        Customer existingCustomer = this.getCustomerById(customerId);
+        existingCustomer.setName(customer.getName());
+        existingCustomer.setLastModifiedDate(LocalDateTime.now());
+        existingCustomer.setVersion(existingCustomer.getVersion() + 1);
+        //object ref in the customers map will be updated no need for the put method
+    }
 }
