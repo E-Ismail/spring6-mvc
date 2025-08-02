@@ -50,4 +50,11 @@ public class BeerController {
         log.debug("[CONTROLLER] Get Beer or something with id: {}", beerId);
         return beerService.getBeerById(beerId);
     }
+
+    @DeleteMapping("/{beerId}")
+    public ResponseEntity<HttpStatus> deleteBeerById(@PathVariable("beerId") UUID beerId) {
+        log.debug("[CONTROLLER] Delete Beer with id: {}", beerId);
+        beerService.deleteById(beerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

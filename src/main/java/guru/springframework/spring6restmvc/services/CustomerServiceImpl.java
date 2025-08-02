@@ -71,4 +71,10 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setVersion(existingCustomer.getVersion() + 1);
         //object ref in the customers map will be updated no need for the put method
     }
+
+    @Override
+    public void deleteCustomerById(UUID customerId) {
+        customerMap.remove(customerId);
+        log.info("[SERVICE] Successfully removed customer with id: {}", customerId);
+    }
 }
