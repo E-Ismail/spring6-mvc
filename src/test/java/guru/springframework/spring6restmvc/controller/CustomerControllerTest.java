@@ -32,8 +32,8 @@ class CustomerControllerTest {
     CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
 
     @Test
-    void customers() throws Exception {
-        given(customerService.getCustomers()).willReturn(customerServiceImpl.getCustomers());
+    void listAllCustomers() throws Exception {
+        given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
         mockMvc.perform(get("/api/v1/customer").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -41,8 +41,8 @@ class CustomerControllerTest {
     }
 
     @Test
-    void getCustomer() throws Exception {
-        Customer customerTest= customerServiceImpl.getCustomers().get(0);
+    void getCustomerById() throws Exception {
+        Customer customerTest= customerServiceImpl.getAllCustomers().get(0);
         given(customerService.getCustomerById(customerTest.getId())).willReturn(customerTest);
         mockMvc.perform(get("/api/v1/customer/"+customerTest.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
