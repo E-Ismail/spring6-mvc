@@ -57,7 +57,7 @@ public class BeerController {
     @RequestMapping(value = BeerController.BEER_PATH_ID, method = RequestMethod.GET)
     public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
         log.debug("[CONTROLLER] Get Beer or something with id: {}", beerId);
-        return beerService.getBeerById(beerId);
+        return beerService.getBeerById(beerId).orElseThrow(NotFoundException::new);
     }
 
     @DeleteMapping(BeerController.BEER_PATH_ID)

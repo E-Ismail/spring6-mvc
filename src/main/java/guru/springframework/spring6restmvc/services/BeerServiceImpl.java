@@ -38,10 +38,10 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer getBeerById(UUID id) {
+    public Optional<Beer> getBeerById(UUID id) {
 
         log.debug("[SERVICE] getBeerById");
-        return beerMap.get(id);
+        return Optional.of(beerMap.get(id));
     }
 
     @Override
@@ -88,7 +88,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void patchBeerById(UUID beerId, Beer beer) {
-        Beer existingBeer = this.getBeerById(beerId);
+        Beer existingBeer = this.getBeerById(beerId).orElse(null);
 
         if (StringUtils.hasText(beer.getBeerName())) {
             existingBeer.setBeerName(beer.getBeerName());
