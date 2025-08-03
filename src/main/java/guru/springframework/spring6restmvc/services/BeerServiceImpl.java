@@ -45,7 +45,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> litBeers() {
+    public List<Beer> listBeers() {
         log.debug("[SERVICE] Lit Beers");
         return new ArrayList<>(beerMap.values());
     }
