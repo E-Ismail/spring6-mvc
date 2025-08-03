@@ -39,7 +39,7 @@ public class CustomerController {
     @RequestMapping(value = CustomerController.CUSTOMER_PATH_ID, method = RequestMethod.GET)
     public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
         log.info("[CONTROLLER] Getting customer with id: {}", customerId);
-        return customerService.getCustomerById(customerId);
+        return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 
     @RequestMapping(method = RequestMethod.POST)

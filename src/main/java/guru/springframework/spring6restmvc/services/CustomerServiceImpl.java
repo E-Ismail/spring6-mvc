@@ -44,9 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
-        log.info("[SERVICE] Retrieving customer by id");
-        return this.customerMap.get(id);
+    public Optional<Customer> getCustomerById(UUID uuid) {
+        log.info("[SERVICE] Retrieving customer by uuid");
+        return Optional.of(customerMap.get(uuid));
     }
 
     @Override
@@ -66,10 +66,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomerById(UUID customerId, Customer customer) {
-        Customer existingCustomer = this.getCustomerById(customerId);
-        existingCustomer.setName(customer.getName());
-        existingCustomer.setLastModifiedDate(LocalDateTime.now());
-        existingCustomer.setVersion(existingCustomer.getVersion() + 1);
+        Optional<Customer> existingCustomer = this.getCustomerById(customerId);
+        existingCustomer.get().setName(customer.getName());
+        existingCustomer.get().setLastModifiedDate(LocalDateTime.now());
+        existingCustomer.get().setVersion(existingCustomer.get().getVersion() + 1);
         //object ref in the customers map will be updated no need for the put method
     }
 
@@ -81,10 +81,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void patchCustomerById(UUID customerId, Customer customer) {
-        Customer existingCustomer = this.getCustomerById(customerId);
+        Optional<Customer> existingCustomer = this.getCustomerById(customerId);
 
-        if(StringUtils.hasText(existingCustomer.getName())) {
-            existingCustomer.setName(customer.getName());
+        if(StringUtils.hasText(existingCustomer.get().getName())) {
+            existingCustomer.get().setName(customer.getName());
         }
 
     }
