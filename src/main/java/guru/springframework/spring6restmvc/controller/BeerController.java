@@ -47,12 +47,12 @@ public class BeerController {
     public List<Beer> litBeers() {
         return beerService.listBeers();
     }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<HttpStatus> handleNotFoundException(){
-        log.debug("handleNotFoundException");
-        return ResponseEntity.notFound().build();
-    }
+    //Moved to ExceptionController
+//    @ExceptionHandler(NotFoundException.class)
+//    public ResponseEntity<HttpStatus> handleNotFoundException(){
+//        log.debug("handleNotFoundException, only for BeerController");
+//        return ResponseEntity.notFound().build();
+//    }
 
     @RequestMapping(value = BeerController.BEER_PATH_ID, method = RequestMethod.GET)
     public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
