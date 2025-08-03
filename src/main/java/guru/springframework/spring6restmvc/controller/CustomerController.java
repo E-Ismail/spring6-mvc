@@ -22,8 +22,11 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping(CustomerController.CUSTOMER_PATH)
 public class CustomerController {
+
+    public static final String CUSTOMER_PATH = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = "/{customerId}";
 
     private final CustomerService customerService;
 
@@ -33,7 +36,7 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
-    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
+    @RequestMapping(value = CustomerController.CUSTOMER_PATH_ID, method = RequestMethod.GET)
     public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
         log.info("[CONTROLLER] Getting customer with id: {}", customerId);
         return customerService.getCustomerById(customerId);
@@ -48,21 +51,21 @@ public class CustomerController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{customerId}")
+    @PutMapping(CustomerController.CUSTOMER_PATH_ID)
     public ResponseEntity<HttpStatus> updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
         log.info("[CONTROLLER] Updating customer with id: {}", customerId);
         customerService.updateCustomerById(customerId, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "/{customerId}")
+    @DeleteMapping(value = CustomerController.CUSTOMER_PATH_ID)
     public ResponseEntity<HttpStatus> deleteCustomerById(@PathVariable("customerId") UUID customerId) {
         log.info("[CONTROLLER] Deleting customer with id: {}", customerId);
         customerService.deleteCustomerById(customerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping(value = "/{customerId}")
+    @PatchMapping(value = CustomerController.CUSTOMER_PATH_ID)
     public ResponseEntity<HttpStatus> patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
         log.info("[CONTROLLER] Patching customer with id: {}", customerId);
         customerService.patchCustomerById(customerId, customer);
