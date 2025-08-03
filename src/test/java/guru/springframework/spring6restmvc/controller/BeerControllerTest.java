@@ -32,12 +32,14 @@ class BeerControllerTest {
     @MockitoBean
     BeerService beerService;
 
+
+    @Autowired
+    ObjectMapper objectMapper;
+
     BeerServiceImpl beerServiceImpl = new BeerServiceImpl();
 
     @Test
     void testCreateNewBeer() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
         Beer beer = beerServiceImpl.litBeers().get(0);
         System.out.println(objectMapper.writeValueAsString(beer));
     }
