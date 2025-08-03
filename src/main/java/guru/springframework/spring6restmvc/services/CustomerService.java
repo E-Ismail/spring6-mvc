@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface CustomerService {
 
-    List<Customer> customers();
+    List<Customer> getCustomers();
 
     Customer getCustomerById(UUID id);
 

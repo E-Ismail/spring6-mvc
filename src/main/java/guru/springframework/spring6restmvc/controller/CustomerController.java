@@ -30,7 +30,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> customers() {
         log.info("[CONTROLLER] Getting customers]");
-        return customerService.customers();
+        return customerService.getCustomers();
     }
 
     @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)

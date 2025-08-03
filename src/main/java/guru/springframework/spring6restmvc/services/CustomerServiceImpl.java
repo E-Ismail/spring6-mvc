@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> customers() {
+    public List<Customer> getCustomers() {
         log.info("[SERVICE] Retrieving customers]");
         return new ArrayList<>(customerMap.values());
     }
