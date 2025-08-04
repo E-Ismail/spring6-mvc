@@ -6,7 +6,7 @@ package guru.springframework.spring6restmvc.services;
  * @create 29/07/2025 - 22:34
  */
 
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,18 +18,18 @@ import java.util.*;
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
-    Map<UUID, Customer> customerMap;
+    Map<UUID, CustomerDTO> customerMap;
 
     public CustomerServiceImpl() {
         this.customerMap = new HashMap<>();
-        Customer customer1 = Customer.builder()
+        CustomerDTO customer1 = CustomerDTO.builder()
                 .id(UUID.randomUUID()).name("Customer 1").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
                 .build();
-        Customer customer2 = Customer.builder()
+        CustomerDTO customer2 = CustomerDTO.builder()
                 .id(UUID.randomUUID()).name("Customer 2").createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now().plusDays(1))
                 .build();
-        Customer customer3 = Customer.builder()
+        CustomerDTO customer3 = CustomerDTO.builder()
                 .id(UUID.randomUUID()).name("Customer 3").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
                 .build();
         customerMap.put(customer1.getId(), customer1);
@@ -38,39 +38,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         log.info("[SERVICE] Retrieving customers]");
         return new ArrayList<>(customerMap.values());
     }
 
     @Override
-    public Optional<Customer> getCustomerById(UUID uuid) {
+    public Optional<CustomerDTO> getCustomerById(UUID uuid) {
         log.info("[SERVICE] Retrieving customer by uuid");
         return Optional.of(customerMap.get(uuid));
     }
 
     @Override
-    public Customer saveCustomer(Customer customer) {
-        log.info("[SERVICE] post customer by name");
-        Customer savedCustomer = Customer
-                .builder()
-                .id(UUID.randomUUID())
-                .version(1)
-                .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now().plusDays(1))
-                .name(customer.getName())
-                .build();
-        this.customerMap.put(customer.getId(), savedCustomer);
-        return savedCustomer;
-    }
+    public void patchCustomerById(UUID customerId, CustomerDTO customer) {
 
-    @Override
-    public void updateCustomerById(UUID customerId, Customer customer) {
-        Optional<Customer> existingCustomer = this.getCustomerById(customerId);
-        existingCustomer.get().setName(customer.getName());
-        existingCustomer.get().setLastModifiedDate(LocalDateTime.now());
-        existingCustomer.get().setVersion(existingCustomer.get().getVersion() + 1);
-        //object ref in the customers map will be updated no need for the put method
+        Optional<CustomerDTO> existingCustomer = this.getCustomerById(customerId);
+        if(StringUtils.hasText(existingCustomer.get().getName())) {
+            existingCustomer.get().setName(customer.getName());
+        }
     }
 
     @Override
@@ -80,12 +65,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void patchCustomerById(UUID customerId, Customer customer) {
-        Optional<Customer> existingCustomer = this.getCustomerById(customerId);
+    public void updateCustomerById(UUID customerId, CustomerDTO customer) {
+        Optional<CustomerDTO> existingCustomer = this.getCustomerById(customerId);
+        existingCustomer.get().setName(customer.getName());
+        existingCustomer.get().setLastModifiedDate(LocalDateTime.now());
+        existingCustomer.get().setVersion(existingCustomer.get().getVersion() + 1);
+        //object ref in the customers map will be updated no need for the put method
+    }
 
-        if(StringUtils.hasText(existingCustomer.get().getName())) {
-            existingCustomer.get().setName(customer.getName());
-        }
-
+    @Override
+    public CustomerDTO saveNewCustomer(CustomerDTO customer) {
+        log.info("[SERVICE] post customer by name");
+        CustomerDTO savedCustomer = CustomerDTO
+                .builder()
+                .id(UUID.randomUUID())
+                .version(1)
+                .createdDate(LocalDateTime.now())
+                .lastModifiedDate(LocalDateTime.now().plusDays(1))
+                .name(customer.getName())
+                .build();
+        this.customerMap.put(customer.getId(), savedCustomer);
+        return savedCustomer;
     }
 }
