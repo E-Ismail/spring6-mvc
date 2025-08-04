@@ -6,10 +6,9 @@ package guru.springframework.spring6restmvc.entities;
  * @create 04/08/2025 - 23:15
  */
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Version;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,6 +21,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Customer {
     @Id
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator
+    @Column(length = 36, columnDefinition = "varchar", unique = true, nullable = false, updatable = false)
     private UUID id;
     private String name;
     @Version
