@@ -6,8 +6,8 @@ package guru.springframework.spring6restmvc.services;
  * @create 05/08/2025 - 22:17
  */
 
+import guru.springframework.spring6restmvc.mappers.CustomerMapper;
 import guru.springframework.spring6restmvc.model.CustomerDTO;
-import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -22,15 +22,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomerServiceJPA implements CustomerService {
     private final CustomerRepository customerRepository;
-    private final BeerRepository beerRepository;
+    private final CustomerMapper customerMapper;
+
     @Override
     public List<CustomerDTO> getAllCustomers() {
-        return List.of();
+        return customerRepository.findAll().stream().map(customerMapper::customerToCustomerDTO).toList();
     }
 
     @Override
-    public Optional<CustomerDTO> getCustomerById(UUID id) {
-        return Optional.empty();
+    public Optional<CustomerDTO> getCustomerById(UUID uuid) {
+        return Optional.ofNullable(customerMapper.customerToCustomerDTO(customerRepository.findById(uuid).orElse(null)));
     }
 
     @Override
