@@ -30,13 +30,15 @@ public class BeerController {
 
     @PutMapping("/{beerId}")
     public ResponseEntity<HttpStatus> updateById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
-        beerService.updateBeerById(beerId, beer);
+        if(beerService.updateBeerById(beerId, beer).isEmpty()){
+            throw new NotFoundException();
+        };
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping
     //@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<BeerDTO> handlePost(@RequestBody BeerDTO beer) {
+    public ResponseEntity<HttpStatus> handlePost(@RequestBody BeerDTO beer) {
         BeerDTO savedBeer = beerService.saveBeer(beer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", BEER_PATH + "/" + savedBeer.getId().toString());
