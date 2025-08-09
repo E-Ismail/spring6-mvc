@@ -35,6 +35,47 @@ class BeerControllerIT {
     @Autowired
     private BeerMapper beerMapper;
 
+    @Test
+    void testPatchByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+        });
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void patchBeerByIdFound() {
+        Beer beer = beerRepository.findAll().get(0);
+        beer.setBeerName("Updated Beer");
+        BeerDTO beerDTO = beerMapper.beerToBeerDTO(beer);
+        beerDTO.setId(null);
+        beerDTO.setVersion(null);
+        final String beerName = beer.getBeerName()+ "PATCHED";
+        beerDTO.setBeerName(beerName);
+
+        ResponseEntity<HttpStatus> responseEntity = beerController.updateBeerPatchById(beer.getId(), beerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Beer updatedBeer = beerRepository.findById(beer.getId()).get();
+        assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+    }
+
+    @Test
+    void testDeleteByIdNotFound() {
+        assertThrows(NotFoundException.class, () -> {
+            beerController.deleteBeerById(UUID.randomUUID());
+        });
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteByIdFound() throws Exception{
+        Beer beer = beerRepository.findAll().get(0);
+        ResponseEntity<HttpStatus> responseEntity = beerController.deleteBeerById(beer.getId());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(beerRepository.findById(beer.getId())).isEmpty();
+    }
 
     @Test
     void testUpdateNotFound() {
@@ -43,6 +84,8 @@ class BeerControllerIT {
         });
     }
 
+    @Rollback
+    @Transactional
     @Test
     void updateExistingBeerById() {
         Beer beer = beerRepository.findAll().get(0);
@@ -57,7 +100,6 @@ class BeerControllerIT {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         Beer updatedBeer = beerRepository.findById(beer.getId()).get();
         assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
-
     }
 
     @Rollback
