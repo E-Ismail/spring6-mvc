@@ -6,6 +6,8 @@ package guru.springframework.spring6restmvc.model;
  * @create 26/07/2025 - 22:14
  */
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,6 +21,9 @@ public class BeerDTO {
 
     private UUID id;
     private Integer version;
+
+    @NotBlank
+    @NotNull
     private String beerName;
     private BeerStyle beerStyle;
     private String upc;

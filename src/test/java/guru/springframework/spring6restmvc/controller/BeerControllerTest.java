@@ -65,7 +65,7 @@ class BeerControllerTest {
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name");
-        given(beerService.patchBeerById(any(),any())).willReturn(Optional.ofNullable(BeerDTO.builder().build()));
+        given(beerService.patchBeerById(any(), any())).willReturn(Optional.ofNullable(BeerDTO.builder().build()));
         mockMvc.perform(patch(BeerController.BEER_PATH + "/" + beer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -81,7 +81,7 @@ class BeerControllerTest {
     @Test
     void testDeleteBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers().get(0);
-       given(beerService.deleteById(any())).willReturn(true);
+        given(beerService.deleteById(any())).willReturn(true);
         mockMvc.perform(delete(BeerController.BEER_PATH + "/" + beer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -95,7 +95,7 @@ class BeerControllerTest {
     void testUpdateBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.listBeers().get(0);
 
-        given(beerService.updateBeerById(any(),any())).willReturn(Optional.of(beer));
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
         mockMvc.perform(put(BeerController.BEER_PATH + "/" + beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -120,6 +120,18 @@ class BeerControllerTest {
     }
 
     @Test
+    void testCreateBeerNullBeerName() throws Exception {
+
+        BeerDTO beer = BeerDTO.builder().build();
+        given(beerService.saveBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
+
+        mockMvc.perform(post(BeerController.BEER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beer))).andExpect(status().isBadRequest());
+    }
+
+    @Test
     void listBeers() throws Exception {
         given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
         mockMvc.perform(get(BeerController.BEER_PATH)
@@ -133,7 +145,7 @@ class BeerControllerTest {
     void getBeerByIdNotFound() throws Exception {
         given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(get(BeerController.BEER_PATH + "/" +  UUID.randomUUID()))
+        mockMvc.perform(get(BeerController.BEER_PATH + "/" + UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
