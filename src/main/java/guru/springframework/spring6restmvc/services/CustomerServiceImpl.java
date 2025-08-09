@@ -38,39 +38,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> getAllCustomers() {
-        log.info("[SERVICE] Retrieving customers]");
-        return new ArrayList<>(customerMap.values());
-    }
+    public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer) {
 
-    @Override
-    public Optional<CustomerDTO> getCustomerById(UUID uuid) {
-        log.info("[SERVICE] Retrieving customer by uuid");
-        return Optional.of(customerMap.get(uuid));
-    }
-
-    @Override
-    public void patchCustomerById(UUID customerId, CustomerDTO customer) {
-
-        Optional<CustomerDTO> existingCustomer = this.getCustomerById(customerId);
-        if(StringUtils.hasText(existingCustomer.get().getName())) {
-            existingCustomer.get().setName(customer.getName());
+        CustomerDTO existing = customerMap.get(customerId);
+        if (StringUtils.hasText(customer.getName())) {
+            existing.setName(customer.getName());
         }
+        return Optional.of(existing);
     }
 
     @Override
-    public void deleteCustomerById(UUID customerId) {
+    public Boolean deleteCustomerById(UUID customerId) {
+
         customerMap.remove(customerId);
-        log.info("[SERVICE] Successfully removed customer with id: {}", customerId);
+        return true;
     }
 
     @Override
-    public void updateCustomerById(UUID customerId, CustomerDTO customer) {
-        Optional<CustomerDTO> existingCustomer = this.getCustomerById(customerId);
-        existingCustomer.get().setName(customer.getName());
-        existingCustomer.get().setLastModifiedDate(LocalDateTime.now());
-        existingCustomer.get().setVersion(existingCustomer.get().getVersion() + 1);
-        //object ref in the customers map will be updated no need for the put method
+    public Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer) {
+        CustomerDTO existing = customerMap.get(customerId);
+        existing.setName(customer.getName());
+        return Optional.of(existing);
     }
 
     @Override
@@ -86,5 +74,17 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
         this.customerMap.put(customer.getId(), savedCustomer);
         return savedCustomer;
+    }
+
+    @Override
+    public Optional<CustomerDTO> getCustomerById(UUID uuid) {
+        log.info("[SERVICE] Retrieving customer by uuid");
+        return Optional.of(customerMap.get(uuid));
+    }
+
+    @Override
+    public List<CustomerDTO> getAllCustomers() {
+        log.info("[SERVICE] Retrieving customers]");
+        return new ArrayList<>(customerMap.values());
     }
 }
