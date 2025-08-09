@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
@@ -20,7 +19,7 @@ public class CustomErrorController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<?> handleBindErrors(MethodArgumentNotValidException exception) {
-        List fieldErrors = exception.getBindingResult().getFieldErrors().stream()
+        var fieldErrors = exception.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> {
                     Map<String, String> error = new HashMap<>();
                     error.put(fieldError.getField(), fieldError.getDefaultMessage());

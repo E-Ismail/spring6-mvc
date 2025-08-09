@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,10 +76,25 @@ public class BeerServiceJPA implements BeerService {
         AtomicReference<Optional<BeerDTO>> beerDTOAtomicReference = new AtomicReference<>();
 
         beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            foundBeer.setBeerName(beerDTO.getBeerName());
-            foundBeer.setBeerStyle(beerDTO.getBeerStyle());
-            foundBeer.setUpc(beerDTO.getUpc());
-            foundBeer.setPrice(beerDTO.getPrice());
+            if(StringUtils.hasText(beerDTO.getBeerName())) {
+                foundBeer.setBeerName(beerDTO.getBeerName());
+            }
+
+            if(beerDTO.getBeerStyle() != null) {
+                foundBeer.setBeerStyle(beerDTO.getBeerStyle());
+            }
+            if(StringUtils.hasText(beerDTO.getUpc())) {
+                foundBeer.setUpc(beerDTO.getUpc());
+            }
+
+            if(beerDTO.getPrice() != null) {
+                foundBeer.setPrice(beerDTO.getPrice());
+            }
+
+            if(beerDTO.getQuantityOnHand() != null) {
+                foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
+            }
+
             beerDTOAtomicReference.set(Optional.of(beerMapper
                     .beerToBeerDTO(beerRepository.save(foundBeer))));
         }, () -> beerDTOAtomicReference.set(Optional.empty()));
