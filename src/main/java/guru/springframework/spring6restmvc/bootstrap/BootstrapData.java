@@ -26,7 +26,7 @@ public class BootstrapData implements CommandLineRunner {
     private final CustomerRepository customerRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         loadBeerData();
         loadCustomerData();
     }
