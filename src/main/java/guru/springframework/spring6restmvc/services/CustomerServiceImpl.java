@@ -23,14 +23,14 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerServiceImpl() {
         this.customerMap = new HashMap<>();
         CustomerDTO customer1 = CustomerDTO.builder()
-                .id(UUID.randomUUID()).name("Customer 1").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
+                .id(UUID.randomUUID()).name("Customer 1").createdDate(LocalDateTime.now()).updateDate(LocalDateTime.now().plusDays(1))
                 .build();
         CustomerDTO customer2 = CustomerDTO.builder()
                 .id(UUID.randomUUID()).name("Customer 2").createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now().plusDays(1))
+                .updateDate(LocalDateTime.now().plusDays(1))
                 .build();
         CustomerDTO customer3 = CustomerDTO.builder()
-                .id(UUID.randomUUID()).name("Customer 3").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
+                .id(UUID.randomUUID()).name("Customer 3").createdDate(LocalDateTime.now()).updateDate(LocalDateTime.now().plusDays(1))
                 .build();
         customerMap.put(customer1.getId(), customer1);
         customerMap.put(customer2.getId(), customer2);
@@ -69,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .id(UUID.randomUUID())
                 .version(1)
                 .createdDate(LocalDateTime.now())
-                .lastModifiedDate(LocalDateTime.now().plusDays(1))
+                .updateDate(LocalDateTime.now().plusDays(1))
                 .name(customer.getName())
                 .build();
         this.customerMap.put(customer.getId(), savedCustomer);

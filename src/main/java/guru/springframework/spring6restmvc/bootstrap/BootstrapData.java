@@ -48,14 +48,24 @@ public class BootstrapData implements CommandLineRunner {
     private void loadCustomerData() {
         if (customerRepository.count() == 0) {
             Customer customer1 = Customer.builder()
-                    .name("Customer 1").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
+                    .name("Customer 1")
+                    .version(1)
+                    .createdDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
                     .build();
+
             Customer customer2 = Customer.builder()
-                    .name("Customer 2").createdDate(LocalDateTime.now())
-                    .lastModifiedDate(LocalDateTime.now().plusDays(1))
+                    .name("Customer 2")
+                    .version(1)
+                    .createdDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
                     .build();
+
             Customer customer3 = Customer.builder()
-                    .name("Customer 3").createdDate(LocalDateTime.now()).lastModifiedDate(LocalDateTime.now().plusDays(1))
+                    .name("Customer 3")
+                    .version(1)
+                    .createdDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
                     .build();
 
             customerRepository.saveAll(Arrays.asList(customer1, customer2, customer3));

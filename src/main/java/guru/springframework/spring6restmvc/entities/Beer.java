@@ -32,8 +32,8 @@ public class Beer {
     @GeneratedValue(generator = "UUID")
     //@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator") deprecated
     @UuidGenerator
+    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", unique = true, nullable = false, updatable = false)
     private UUID id;
 
     @Version
@@ -46,6 +46,7 @@ public class Beer {
     private String beerName;
 
     @NotNull
+    @JdbcTypeCode(value = SqlTypes.SMALLINT)
     private BeerStyle beerStyle;
 
     @NotNull
