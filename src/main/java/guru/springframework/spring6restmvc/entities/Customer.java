@@ -19,8 +19,8 @@ import java.util.UUID;
 @Setter
 @Builder
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -29,6 +29,10 @@ public class Customer {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
     private String name;
+
+    @Column
+    private String email;
+
     @Version
     private Integer version;
     private LocalDateTime createdDate;
