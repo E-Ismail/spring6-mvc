@@ -20,10 +20,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+//@Disabled
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("localmysql")
-public class MySqlTest {
+public class MySQLIT {
 
     @Container
     @ServiceConnection
