@@ -47,9 +47,11 @@ public class BeerController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<BeerDTO> litBeers() {
-        return beerService.listBeers();
+    public List<BeerDTO> litBeers(@RequestParam(required = false) String beerName) {
+        return beerService.listBeers(beerName);
     }
+
+
     //Moved to ExceptionController
 //    @ExceptionHandler(NotFoundException.class)
 //    public ResponseEntity<HttpStatus> handleNotFoundException(){
