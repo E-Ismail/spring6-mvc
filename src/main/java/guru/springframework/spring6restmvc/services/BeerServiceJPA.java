@@ -6,6 +6,7 @@ package guru.springframework.spring6restmvc.services;
  * @create 05/08/2025 - 22:16
  */
 
+import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
@@ -27,13 +28,24 @@ import java.util.concurrent.atomic.AtomicReference;
 public class BeerServiceJPA implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
+    private final static String WILDCARD = "%";
 
     @Override
     public List<BeerDTO> listBeers(String beerName) {
-        return beerRepository.findAll()
-                .stream()
+        List<Beer> beerList;
+        if (StringUtils.hasText(beerName)) {
+            beerList = listBeersByName(beerName);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+
+        return beerList.stream()
                 .map(beerMapper::beerToBeerDTO)
                 .toList();
+    }
+
+    List<Beer> listBeersByName(String name) {
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCase(WILDCARD + name + WILDCARD);
     }
 
     @Override
@@ -76,22 +88,22 @@ public class BeerServiceJPA implements BeerService {
         AtomicReference<Optional<BeerDTO>> beerDTOAtomicReference = new AtomicReference<>();
 
         beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            if(StringUtils.hasText(beerDTO.getBeerName())) {
+            if (StringUtils.hasText(beerDTO.getBeerName())) {
                 foundBeer.setBeerName(beerDTO.getBeerName());
             }
 
-            if(beerDTO.getBeerStyle() != null) {
+            if (beerDTO.getBeerStyle() != null) {
                 foundBeer.setBeerStyle(beerDTO.getBeerStyle());
             }
-            if(StringUtils.hasText(beerDTO.getUpc())) {
+            if (StringUtils.hasText(beerDTO.getUpc())) {
                 foundBeer.setUpc(beerDTO.getUpc());
             }
 
-            if(beerDTO.getPrice() != null) {
+            if (beerDTO.getPrice() != null) {
                 foundBeer.setPrice(beerDTO.getPrice());
             }
 
-            if(beerDTO.getQuantityOnHand() != null) {
+            if (beerDTO.getQuantityOnHand() != null) {
                 foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
             }
 
