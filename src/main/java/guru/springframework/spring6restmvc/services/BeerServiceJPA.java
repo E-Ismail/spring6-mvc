@@ -82,7 +82,7 @@ public class BeerServiceJPA implements BeerService {
     }
 
     private Page<Beer> listBeersByNameAndStyle(String beerName, BeerStyle beerStyle, PageRequest pageRequest) {
-        return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle(WILDCARD + beerName + WILDCARD, beerStyle, null);
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle(WILDCARD + beerName + WILDCARD, beerStyle, pageRequest);
     }
 
     Page<Beer> listBeersByBeerStyle(BeerStyle beerStyle, PageRequest pageRequest) {
