@@ -14,6 +14,7 @@ import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
 import guru.springframework.spring6restmvc.services.BeerCsvService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BootstrapData implements CommandLineRunner {
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
@@ -38,9 +40,11 @@ public class BootstrapData implements CommandLineRunner {
     //Everything should run or should roll back
     @Override
     public void run(String... args) throws Exception {
+        log.info("Loading data...");
         loadBeerData();
         loadCsvData();
         loadCustomerData();
+        log.info("Data loaded!");
     }
 
 
