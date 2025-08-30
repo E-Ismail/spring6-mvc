@@ -5,12 +5,17 @@ package guru.springframework.spring6restmvc.entities;
  * @project spring-6-rest-mvc
  * @create 04/08/2025 - 15:42
  */
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -47,5 +52,9 @@ public class BeerOrder {
     @ManyToOne
     //Bi-directional
     private Customer customer;
+
+    @OneToMany(mappedBy = "beerOrder")
+    //Bi-directional
+    private Set<BeerOrderLine> beerOrderLines;
 
 }

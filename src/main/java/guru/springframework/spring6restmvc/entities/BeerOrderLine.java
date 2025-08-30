@@ -58,6 +58,16 @@ public class BeerOrderLine {
         return this.id == null;
     }
 
+    @ManyToOne
+    //Bi-directional
+    private BeerOrder beerOrder;
+
+
+    @ManyToOne
+    private Beer beer;
+
     private Integer orderQuantity = 0;
     private Integer quantityAllocated = 0;
+
+
 }
