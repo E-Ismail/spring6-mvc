@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS beer_order_line
     last_modified_date datetime(6) default null,
     order_quantity     int         default null,
     quantity_allocated int         default null,
-    version            bigint      default null,
+    version            integer      default null,
     beer_order_id      varchar(36) default null,
     primary key (id),
     constraint foreign key (beer_order_id) references beer_order (id),

@@ -13,6 +13,7 @@ import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -37,4 +38,8 @@ public class Customer {
     private Integer version;
     private LocalDateTime createdDate;
     private LocalDateTime updateDate;
+
+    @OneToMany(mappedBy = "customer")
+    //Bi-directional
+    private Set<BeerOrder> beerOrders;
 }
