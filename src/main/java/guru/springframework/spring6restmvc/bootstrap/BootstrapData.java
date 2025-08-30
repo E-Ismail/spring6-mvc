@@ -65,12 +65,13 @@ public class BootstrapData implements CommandLineRunner {
                     case "English Pale Ale" -> BeerStyle.PALE_ALE;
                     default -> BeerStyle.PILSNER;
                 };
+
                 beerRepository.save(Beer.builder()
-                        .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(),50))
-                        .beerStyle(beerStyle)
-                        .price(BigDecimal.TEN)
-                        .upc(beerCSVRecord.getRow().toString())
-                        .quantityOnHand(beerCSVRecord.getCount())
+                                .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
+                                .beerStyle(beerStyle)
+                                .price(BigDecimal.TEN)
+                                .upc(beerCSVRecord.getRow().toString())
+                                .quantityOnHand(beerCSVRecord.getCount())
                         .build());
             });
         }
