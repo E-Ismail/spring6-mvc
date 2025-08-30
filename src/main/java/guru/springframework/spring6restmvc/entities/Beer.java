@@ -61,6 +61,11 @@ public class Beer {
     @NotNull
     private BigDecimal price;
 
+    @ManyToMany
+    @JoinTable(name = "beer_category",joinColumns = @JoinColumn(name = "beer_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
+
     @CreationTimestamp
     private LocalDateTime createdDate;
 
