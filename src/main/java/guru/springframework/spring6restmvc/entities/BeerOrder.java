@@ -26,7 +26,8 @@ import java.util.UUID;
 @Builder
 public class BeerOrder {
 
-    public BeerOrder(UUID id, Integer version, Timestamp createdDate, Timestamp lastModifiedDate, String customerRef, Customer customer, Set<BeerOrderLine> beerOrderLines) {
+    public BeerOrder(UUID id, Integer version, Timestamp createdDate, Timestamp lastModifiedDate, String customerRef,
+                     Customer customer, Set<BeerOrderLine> beerOrderLines, BeerOrderShipment beerOrderShipment) {
         this.id = id;
         this.version = version;
         this.createdDate = createdDate;
@@ -34,13 +35,14 @@ public class BeerOrder {
         this.customerRef = customerRef;
         this.setCustomer(customer);
         this.beerOrderLines = beerOrderLines;
+        this.beerOrderShipment = beerOrderShipment;
     }
 
     @Id
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
     @JdbcTypeCode(SqlTypes.CHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
     @Version
@@ -71,5 +73,8 @@ public class BeerOrder {
     @OneToMany(mappedBy = "beerOrder")
     //Bi-directional
     private Set<BeerOrderLine> beerOrderLines;
+
+    @OneToOne
+    private BeerOrderShipment beerOrderShipment;
 
 }
