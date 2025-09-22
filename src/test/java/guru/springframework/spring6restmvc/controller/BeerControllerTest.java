@@ -43,7 +43,6 @@ class BeerControllerTest {
     @MockitoBean
     BeerService beerService;
 
-
     @Autowired
     ObjectMapper objectMapper;
 
