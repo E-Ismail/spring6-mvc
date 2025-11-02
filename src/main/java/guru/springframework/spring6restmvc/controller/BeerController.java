@@ -48,7 +48,7 @@ public class BeerController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<BeerDTO> litBeers(@RequestParam(required = false) String beerName,
+    public Page<BeerDTO> listBeers(@RequestParam(required = false) String beerName,
                                   @RequestParam(required = false) BeerStyle beerStyle,
                                   @RequestParam(required = false) Boolean showInventory,
                                   @RequestParam(required = false) Integer pageNumber,
