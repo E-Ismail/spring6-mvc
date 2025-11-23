@@ -40,9 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @create 05/08/2025 - 22:25
  */
 
-//Full spring boot context, Complete test
+//Full Spring Boot context, Complete test
 @SpringBootTest
 class BeerControllerIT {
+
     @Autowired
     BeerController beerController;
 
@@ -70,7 +71,7 @@ class BeerControllerIT {
     @Disabled // Optimistic lock demo
     @Test
     void testUpdateBeerBadVersion() throws Exception {
-        Beer beer = beerRepository.findAll().get(0);
+        Beer beer = beerRepository.findAll().getFirst();
 
         BeerDTO beerDTO = beerMapper.beerToBeerDTO(beer);
 
@@ -268,7 +269,7 @@ class BeerControllerIT {
 
     @Test
     void testListBeers() {
-        Page<BeerDTO> dtos = beerController.litBeers(null, null, false, 1, 25);
+        Page<BeerDTO> dtos = beerController.listBeers(null, null, false, 1, 25);
         assertThat(dtos.get().toList()).hasSize(25);
     }
 
@@ -277,7 +278,7 @@ class BeerControllerIT {
     @Test
     void testEmptyList() {
         beerRepository.deleteAll();
-        Page<BeerDTO> dtos = beerController.litBeers(null, null, false, 1, 25);
+        Page<BeerDTO> dtos = beerController.listBeers(null, null, false, 1, 25);
         assertThat(dtos.get().toList().size()).isEqualTo(0);
     }
 }
