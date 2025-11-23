@@ -66,7 +66,7 @@ class CustomerControllerTest {
 
     @Test
     void testPatchCustomer() throws Exception {
-        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().getFirst();
 
         Map<String, Object> customerMap = new HashMap<>();
         customerMap.put("name", "New Name");
@@ -89,7 +89,7 @@ class CustomerControllerTest {
 
     @Test
     void testDeleteCustomer() throws Exception {
-        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().getFirst();
         given(customerService.deleteCustomerById(any())).willReturn(true);
         mockMvc.perform(
                         delete(CustomerController.CUSTOMER_PATH + "/" + customer.getId())
@@ -105,7 +105,7 @@ class CustomerControllerTest {
 
     @Test
     void updateCustomerById() throws Exception {
-        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().getFirst();
 
         given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(CustomerDTO.builder()
                 .build()));
@@ -127,7 +127,7 @@ class CustomerControllerTest {
     @Test
     void createCustomer() throws Exception {
 
-        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().getFirst();
         customer.setId(null);
         customer.setVersion(null);
 
@@ -172,7 +172,7 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerById() throws Exception {
-        CustomerDTO customerTest = customerServiceImpl.getAllCustomers().get(0);
+        CustomerDTO customerTest = customerServiceImpl.getAllCustomers().getFirst();
         given(customerService.getCustomerById(customerTest.getId())).willReturn(Optional.of(customerTest));
         mockMvc.perform(
                         get(CustomerController.CUSTOMER_PATH + "/" + customerTest.getId())
