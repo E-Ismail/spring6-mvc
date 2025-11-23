@@ -19,10 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.nio.file.AccessDeniedException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
 
 import static guru.springframework.spring6restmvc.helpers.TestStaticHelper.getHttpBasic;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /*
@@ -85,7 +84,13 @@ class BeerControllerTest {
         beerMap.put("beerName", "New Name");
         given(beerService.patchBeerById(any(), any())).willReturn(Optional.ofNullable(BeerDTO.builder().build()));
         mockMvc.perform(patch(BeerController.BEER_PATH + "/" + beer.getId())
-                        .with(getHttpBasic())
+                        .with(jwt().jwt(jwt -> {
+                            jwt.claims(claim -> {
+                                        claim.put("scope", List.of("message-read", "message-write"));
+                                    })
+                                    .subject("messaging-client")
+                                    .notBefore(Instant.now().minusSeconds(5L));
+                        }))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
