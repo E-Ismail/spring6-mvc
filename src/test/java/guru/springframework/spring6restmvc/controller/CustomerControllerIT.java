@@ -40,7 +40,7 @@ class CustomerControllerIT {
     @Transactional
     @Test
     void deleteByIdFound() {
-        Customer customer = customerRepository.findAll().get(0);
+        Customer customer = customerRepository.findAll().getFirst();
 
         ResponseEntity responseEntity = customerController.deleteCustomerById(customer.getId());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
@@ -66,7 +66,7 @@ class CustomerControllerIT {
     @Transactional
     @Test
     void updateExistingBeer() {
-        Customer customer = customerRepository.findAll().get(0);
+        Customer customer = customerRepository.findAll().getFirst();
         CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
         customerDTO.setId(null);
         customerDTO.setVersion(null);

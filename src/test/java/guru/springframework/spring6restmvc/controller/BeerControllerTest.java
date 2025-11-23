@@ -3,9 +3,9 @@ package guru.springframework.spring6restmvc.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.config.SpringSecurityConfig;
 import guru.springframework.spring6restmvc.model.BeerDTO;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.services.BeerService;
 import guru.springframework.spring6restmvc.services.BeerServiceImpl;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,19 +17,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.helpers.TestStaticHelper.getHttpBasic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 /*
@@ -63,6 +64,17 @@ class BeerControllerTest {
     @BeforeEach
     void setUp() {
         beerServiceImpl = new BeerServiceImpl();
+    }
+
+    @Test
+    void invalidAuthentication() {
+        assertThrows(AccessDeniedException.class, () -> {
+            mockMvc.perform(
+                            get(BeerController.BEER_PATH)
+                                    .queryParam("beersStyle", BeerStyle.IPA.name())
+                                    .queryParam("pageSize", "800"))
+                    .andExpect(status().isUnauthorized());
+        });
     }
 
     @Test
@@ -159,10 +171,6 @@ class BeerControllerTest {
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
-    private static @NotNull RequestPostProcessor getHttpBasic() {
-        return httpBasic("user1", "password");
-    }
-
     @Test
     void testListBeers() throws Exception {
         given(beerService.listBeers(any(), any(), any(), any(), any()))
@@ -181,7 +189,11 @@ class BeerControllerTest {
     void getBeerByIdNotFound() throws Exception {
         given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(get(BeerController.BEER_PATH + "/" + UUID.randomUUID()))
+        mockMvc.perform
+                        (
+                                get(BeerController.BEER_PATH + "/" + UUID.randomUUID())
+                                        .with(getHttpBasic())
+                        )
                 .andExpect(status().isNotFound());
     }
 
@@ -192,6 +204,7 @@ class BeerControllerTest {
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
         mockMvc.perform(get(BeerController.BEER_PATH + "/" + testBeer.getId())
+                        .with(getHttpBasic())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

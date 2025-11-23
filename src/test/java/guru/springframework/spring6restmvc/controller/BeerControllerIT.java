@@ -28,9 +28,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static guru.springframework.spring6restmvc.helpers.TestStaticHelper.getHttpBasic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,7 +67,10 @@ class BeerControllerIT {
     void setUp() {
         //Setting up mockMVC environment with the spring data repositories injected in the services
         //A full spring boot test, bringing it all!
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+        //
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .apply(springSecurity())
+                .build();
     }
 
     @Disabled // Optimistic lock demo
@@ -77,10 +82,13 @@ class BeerControllerIT {
 
         beerDTO.setBeerName("Updated Name");
 
-        MvcResult result = mockMvc.perform(put(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, beer.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beerDTO)))
+        MvcResult result = mockMvc.perform(
+                        put(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, beer.getId())
+                                .with(getHttpBasic())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO))
+                )
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -88,10 +96,13 @@ class BeerControllerIT {
 
         beerDTO.setBeerName("Updated Name 2");
 
-        MvcResult result2 = mockMvc.perform(put(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, beer.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beerDTO)))
+        MvcResult result2 = mockMvc.perform(
+                        put(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, beer.getId())
+                                .with(getHttpBasic())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(beerDTO))
+                )
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -100,13 +111,16 @@ class BeerControllerIT {
 
     @Test
     void tesListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
-        mockMvc.perform(get(BeerController.BEER_PATH)
-                        .queryParam("beerName", "IPA")
-                        .queryParam("beerStyle", BeerStyle.IPA.name())
-                        .queryParam("showInventory", "true")
-                        .queryParam("pageNumber", "2")
-                        .queryParam("pageSize", "50")
-                )
+        mockMvc.perform
+                        (
+                                get(BeerController.BEER_PATH)
+                                        .with(getHttpBasic())
+                                        .queryParam("beerName", "IPA")
+                                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                                        .queryParam("showInventory", "true")
+                                        .queryParam("pageNumber", "2")
+                                        .queryParam("pageSize", "50")
+                        )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(11)))
                 .andExpect(jsonPath("$.content[0].quantityOnHand", is(IsNull.notNullValue())));
@@ -115,6 +129,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyleAndNameShowInventoryTrue() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(getHttpBasic())
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true"))
@@ -126,6 +141,7 @@ class BeerControllerIT {
     @Test
     void testListBeersByStyleAndNameShowInventoryFalse() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(getHttpBasic())
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "FALSE"))
@@ -136,25 +152,35 @@ class BeerControllerIT {
 
     @Test
     void testListBeersByStyleAndName() throws Exception {
-        mockMvc.perform(get(BeerController.BEER_PATH)
-                        .queryParam("beerName", "IPA")
-                        .queryParam("beerStyle", BeerStyle.IPA.name()))
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .with(getHttpBasic())
+                                .queryParam("beerName", "IPA")
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(11)));
     }
 
     @Test
     void testListBeersByBeerStyle() throws Exception {
-        mockMvc.perform(get(BeerController.BEER_PATH)
-                        .queryParam("beerStyle", BeerStyle.IPA.name()))
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .with(getHttpBasic())
+                                .queryParam("beerStyle", BeerStyle.IPA.name())
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(11)));
     }
 
     @Test
     void testListBeersByName() throws Exception {
-        mockMvc.perform(get(BeerController.BEER_PATH)
-                        .queryParam("beerName", "IPA"))
+        mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .with(getHttpBasic())
+                                .queryParam("beerName", "IPA")
+
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(11)));
     }
@@ -166,10 +192,14 @@ class BeerControllerIT {
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name very long very very very very very very very very very very very very very very very very very very LOOOOONNNNG");
 
-        MvcResult mvcResult = mockMvc.perform(patch(BeerController.BEER_PATH + "/" + beer.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beerMap)))
+        MvcResult mvcResult = mockMvc.perform
+                        (
+                                patch(BeerController.BEER_PATH + "/" + beer.getId())
+                                        .with(getHttpBasic())
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .accept(MediaType.APPLICATION_JSON)
+                                        .content(objectMapper.writeValueAsString(beerMap))
+                        )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.length()", is(1)))
                 .andReturn();
