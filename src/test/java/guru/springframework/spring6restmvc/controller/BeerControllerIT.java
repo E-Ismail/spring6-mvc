@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -205,7 +206,15 @@ class BeerControllerIT {
 
     @Test
     void testPatchByIdNotFound() {
-        assertThrows(NotFoundException.class, () -> beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build()));
+        assertThrows(NotFoundException.class, () -> beerController
+                .updateById(UUID.randomUUID(),
+                        BeerDTO.builder()
+                                .version(1)
+                                .beerName("New Beer Name")
+                                .upc("UPC")
+                                .price(BigDecimal.valueOf(12.4))
+                                .beerStyle(BeerStyle.ALE)
+                                .build()));
     }
 
     @Rollback
@@ -243,7 +252,7 @@ class BeerControllerIT {
 
     @Test
     void testUpdateNotFound() {
-        assertThrows(NotFoundException.class, () -> beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build()));
+        assertThrows(NotFoundException.class, () -> beerController.updateById(UUID.randomUUID(), BeerDTO.builder().version(1).build()));
     }
 
     @Rollback

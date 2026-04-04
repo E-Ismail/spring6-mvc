@@ -1,4 +1,4 @@
-package guru.springframework.config;
+package guru.springframework.spring6restmvc.config;
 
 /*
  * @author Ech-Cherrate Ismail

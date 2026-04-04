@@ -107,27 +107,22 @@ public class BeerServiceJPA implements BeerService {
     }
 
     @Override
-    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beerDTO) {
-        System.out.println("Version: "+ beerDTO.getVersion());
-        Beer savedDetachedBeer  = beerRepository.save(beerMapper.beerDTOToBeer(beerDTO));
-        System.out.println("Version: "+ savedDetachedBeer.getVersion());
-        //Optimistic locking version is different, therefore the ObjectOptimisticLockingFailureException
-        return Optional.of(beerMapper.beerToBeerDTO(savedDetachedBeer));
-        //This implementation use an implicit trx
-//        AtomicReference<Optional<BeerDTO>> beerDTOAtomicReference = new AtomicReference<>();
-//
-//        beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-//            foundBeer.setBeerName(beerDTO.getBeerName());
-//            foundBeer.setBeerStyle(beerDTO.getBeerStyle());
-//            foundBeer.setUpc(beerDTO.getUpc());
-//            foundBeer.setPrice(beerDTO.getPrice());
-//            foundBeer.setQuantityOnHand(beerDTO.getQuantityOnHand());
-//            foundBeer.setVersion(beerDTO.getVersion());
-//            beerDTOAtomicReference.set(Optional.of(beerMapper
-//                    .beerToBeerDTO(beerRepository.save(foundBeer))));
-//        }, () -> beerDTOAtomicReference.set(Optional.empty()));
-//
-//        return beerDTOAtomicReference.get();
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
+        AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
+
+        beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
+            foundBeer.setBeerName(beer.getBeerName());
+            foundBeer.setBeerStyle(beer.getBeerStyle());
+            foundBeer.setUpc(beer.getUpc());
+            foundBeer.setPrice(beer.getPrice());
+            foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+            atomicReference.set(Optional.of(beerMapper
+                    .beerToBeerDTO(beerRepository.save(foundBeer))));
+        }, () -> {
+            atomicReference.set(Optional.empty());
+        });
+
+        return atomicReference.get();
     }
 
     @Override
