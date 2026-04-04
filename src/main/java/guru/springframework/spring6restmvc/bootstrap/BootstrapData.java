@@ -36,15 +36,15 @@ public class BootstrapData implements CommandLineRunner {
     private final CustomerRepository customerRepository;
     private final BeerCsvService beerCsvService;
 
-    @Transactional
     //Everything should run or should roll back
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         log.info("Loading data...");
         loadBeerData();
         loadCsvData();
         loadCustomerData();
-        log.info("Data loaded!");
+        log.info("Data loaded! Beers: {}, Customers: {}", beerRepository.count(), customerRepository.count());
     }
 
 
@@ -67,11 +67,11 @@ public class BootstrapData implements CommandLineRunner {
                 };
 
                 beerRepository.save(Beer.builder()
-                                .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
-                                .beerStyle(beerStyle)
-                                .price(BigDecimal.TEN)
-                                .upc(beerCSVRecord.getRow().toString())
-                                .quantityOnHand(beerCSVRecord.getCount())
+                        .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
+                        .beerStyle(beerStyle)
+                        .price(BigDecimal.TEN)
+                        .upc(beerCSVRecord.getRow().toString())
+                        .quantityOnHand(beerCSVRecord.getCount())
                         .build());
             });
         }
