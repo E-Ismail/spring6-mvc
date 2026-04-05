@@ -70,13 +70,11 @@ class BeerControllerTest {
     @Test
     @Disabled("AccessDeniedException not thrown ")
     void invalidAuthentication() {
-        assertThrows(AccessDeniedException.class, () -> {
-            mockMvc.perform(
-                            get(BeerController.BEER_PATH)
-                                    .queryParam("beersStyle", BeerStyle.IPA.name())
-                                    .queryParam("pageSize", "800"))
-                    .andExpect(status().isUnauthorized());
-        });
+        assertThrows(AccessDeniedException.class, () -> mockMvc.perform(
+                        get(BeerController.BEER_PATH)
+                                .queryParam("beersStyle", BeerStyle.IPA.name())
+                                .queryParam("pageSize", "800"))
+                .andExpect(status().isUnauthorized()));
     }
 
     @Test
